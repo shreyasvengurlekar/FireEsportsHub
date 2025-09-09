@@ -223,6 +223,7 @@ export class MemStorage implements IStorage {
     const tournament: Tournament = { 
       ...insertTournament, 
       id,
+      currentPlayers: insertTournament.currentPlayers || 0,
       createdAt: new Date()
     };
     this.tournaments.set(id, tournament);
@@ -252,6 +253,7 @@ export class MemStorage implements IStorage {
     const registration: Registration = { 
       ...insertRegistration, 
       id,
+      hasParentalConsent: insertRegistration.hasParentalConsent || false,
       createdAt: new Date()
     };
     this.registrations.set(id, registration);
@@ -286,6 +288,7 @@ export class MemStorage implements IStorage {
       ...insertBlogPost, 
       id,
       views: 0,
+      imageUrl: insertBlogPost.imageUrl || null,
       createdAt: new Date(),
       updatedAt: new Date()
     };
