@@ -1,4 +1,5 @@
 import { 
+  users,
   type User, 
   type InsertUser, 
   type Tournament, 
@@ -43,7 +44,7 @@ export interface IStorage {
   createNewsletterSubscription(newsletter: InsertNewsletter): Promise<Newsletter>;
 }
 
-export class MemStorage implements IStorage {
+class MemStorage implements IStorage {
   private users: Map<string, User>;
   private tournaments: Map<string, Tournament>;
   private registrations: Map<string, Registration>;
@@ -331,4 +332,99 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+class DrizzleStorage implements IStorage {
+  // Users
+  async getUser(id: string): Promise<User | undefined> {
+    return db.query.users.findFirst({ where: eq(users.id, id) });
+  }
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    return db.query.users.findFirst({ where: eq(users.username, username) });
+  }
+  async createUser(user: InsertUser): Promise<User> {
+    const [newUser] = await db.insert(users).values(user).returning();
+    return newUser;
+  }
+
+  // Tournaments
+  async getTournaments(): Promise<Tournament[]> {
+    return db.query.tournamentsTable.findMany({
+      orderBy: [asc(tournamentsTable.startDate)],
+    });
+  }
+  async getTournament(id: string): Promise<Tournament | undefined> {
+    return db.query.tournamentsTable.findFirst({ where: eq(tournamentsTable.id, id) });
+  }
+  async createTournament(tournament: InsertTournament): Promise<Tournament> {
+    const [newTournament] = await db.insert(tournamentsTable).values(tournament).returning();
+    return newTournament;
+  }
+  async updateTournament(id: string, updates: Partial<Tournament>): Promise<Tournament | undefined> {
+    const [updatedTournament] = await db.update(tournamentsTable).set(updates).where(eq(tournamentsTable.id, id)).returning();
+    return updatedTournament;
+  }
+
+  // Registrations
+  async getRegistrations(tournamentId?: string): Promise<Registration[]> {
+    if (tournamentId) {
+      return db.query.registrationsTable.findMany({ where: eq(registrationsTable.tournamentId, tournamentId) });
+    }
+    return db.query.registrationsTable.findMany();
+  }
+  async createRegistration(registration: InsertRegistration): Promise<Registration> {
+    // Note: In a real app, you'd wrap this and the player count update in a transaction
+    const [newRegistration] = await db.insert(registrationsTable).values(registration).returning();
+    
+    // Update tournament current players count
+    const tournament = await this.getTournament(registration.tournamentId);
+    if (tournament) {
+      await this.updateTournament(registration.tournamentId, { currentPlayers: tournament.currentPlayers + 1 });
+    }
+
+    return newRegistration;
+  }
+  
+  // Blog Posts
+  async getBlogPosts(): Promise<BlogPost[]> {
+    return db.query.blogPostsTable.findMany({
+      orderBy: [desc(blogPostsTable.createdAt)],
+    });
+  }
+  async getBlogPost(id: string): Promise<BlogPost | undefined> {
+    return db.query.blogPostsTable.findFirst({ where: eq(blogPostsTable.id, id) });
+  }
+  async createBlogPost(post: InsertBlogPost): Promise<BlogPost> {
+    const [newPost] = await db.insert(blogPostsTable).values(post).returning();
+    return newPost;
+  }
+  async incrementPostViews(id: string): Promise<void> {
+    const post = await this.getBlogPost(id);
+    if (post) {
+      await db.update(blogPostsTable).set({ views: post.views + 1 }).where(eq(blogPostsTable.id, id));
+    }
+  }
+
+  // Contacts
+  async createContact(contact: InsertContact): Promise<Contact> {
+    const [newContact] = await db.insert(contactsTable).values(contact).returning();
+    return newContact;
+  }
+  
+  // Newsletter
+  async createNewsletterSubscription(newsletter: InsertNewsletter): Promise<Newsletter> {
+    const [newSubscription] = await db.insert(newslettersTable).values(newsletter).returning();
+    return newSubscription;
+  }
+}
+
+function initializeStorage(): IStorage {
+  // Use DrizzleStorage in production (on Vercel)
+  if (process.env.NODE_ENV === 'production') {
+    console.log("Using DrizzleStorage for production.");
+    return new DrizzleStorage();
+  }
+  // Use MemStorage for local development
+  console.log("Using MemStorage for development.");
+  return new MemStorage();
+}
+
+export const storage: IStorage = initializeStorage();
