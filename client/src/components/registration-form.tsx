@@ -24,9 +24,12 @@ type RegistrationFormData = z.infer<typeof registrationFormSchema>;
 interface RegistrationFormProps {
   selectedTournamentId?: string;
   onSuccess?: () => void;
+  autoFocus?: boolean;
 }
 
-export default function RegistrationForm({ selectedTournamentId, onSuccess }: RegistrationFormProps) {
+import { useEffect, useRef } from "react";
+
+export default function RegistrationForm({ selectedTournamentId, onSuccess, autoFocus }: RegistrationFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -35,6 +38,7 @@ export default function RegistrationForm({ selectedTournamentId, onSuccess }: Re
     queryKey: ["/api/tournaments"],
   });
 
+  const playerNameInputRef = useRef<HTMLInputElement | null>(null);
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationFormSchema),
     defaultValues: {
@@ -47,6 +51,13 @@ export default function RegistrationForm({ selectedTournamentId, onSuccess }: Re
       terms: false,
     },
   });
+
+  // Autofocus player name input when dialog opens
+  useEffect(() => {
+    if (autoFocus && playerNameInputRef.current) {
+      playerNameInputRef.current.focus();
+    }
+  }, [autoFocus]);
 
   const registrationMutation = useMutation({
     mutationFn: async (data: Omit<RegistrationFormData, "terms">) => {
@@ -72,10 +83,13 @@ export default function RegistrationForm({ selectedTournamentId, onSuccess }: Re
   });
 
   const onSubmit = async (data: RegistrationFormData) => {
+    if (isSubmitting || registrationMutation.isPending) return;
     setIsSubmitting(true);
     try {
       const { terms, ...registrationData } = data;
       await registrationMutation.mutateAsync(registrationData);
+    } catch (err) {
+      // Error handled by mutation onError
     } finally {
       setIsSubmitting(false);
     }
@@ -98,11 +112,18 @@ export default function RegistrationForm({ selectedTournamentId, onSuccess }: Re
               <FormItem>
                 <FormLabel>Player Name</FormLabel>
                 <FormControl>
-                  <Input 
-                    placeholder="Enter your player name" 
+                  <Input
+                    placeholder="Enter your player name"
                     className="gaming-input"
                     data-testid="input-player-name"
-                    {...field} 
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={el => {
+                      field.ref(el);
+                      playerNameInputRef.current = el;
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
@@ -117,12 +138,16 @@ export default function RegistrationForm({ selectedTournamentId, onSuccess }: Re
               <FormItem>
                 <FormLabel>Email Address</FormLabel>
                 <FormControl>
-                  <Input 
+                  <Input
                     type="email"
-                    placeholder="Enter your email address" 
+                    placeholder="Enter your email address"
                     className="gaming-input"
                     data-testid="input-email"
-                    {...field} 
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
                   />
                 </FormControl>
                 <FormMessage />
@@ -137,15 +162,18 @@ export default function RegistrationForm({ selectedTournamentId, onSuccess }: Re
               <FormItem>
                 <FormLabel>Age</FormLabel>
                 <FormControl>
-                  <Input 
+                  <Input
                     type="number"
                     min="10"
                     max="18"
-                    placeholder="Enter your age" 
+                    placeholder="Enter your age"
                     className="gaming-input"
                     data-testid="input-age"
-                    {...field}
-                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                    value={field.value}
+                    onChange={e => field.onChange(Number(e.target.value))}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
                   />
                 </FormControl>
                 <FormMessage />
@@ -160,11 +188,15 @@ export default function RegistrationForm({ selectedTournamentId, onSuccess }: Re
               <FormItem>
                 <FormLabel>Free Fire ID</FormLabel>
                 <FormControl>
-                  <Input 
-                    placeholder="Enter your Free Fire ID" 
+                  <Input
+                    placeholder="Enter your Free Fire ID"
                     className="gaming-input"
                     data-testid="input-free-fire-id"
-                    {...field} 
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
                   />
                 </FormControl>
                 <FormMessage />

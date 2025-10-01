@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,8 +18,9 @@ import {
 import type { Tournament } from "@shared/schema";
 
 export default function Tournaments() {
-  const [selectedTournament, setSelectedTournament] = useState<string>("");
+  const [selectedTournament, setSelectedTournament] = useState<string | null>(null);
   const [showRegistration, setShowRegistration] = useState(false);
+  const registrationDialogRef = useRef<HTMLButtonElement | null>(null);
 
   const { data: tournaments = [], isLoading } = useQuery<Tournament[]>({
     queryKey: ["/api/tournaments"],
@@ -28,6 +29,9 @@ export default function Tournaments() {
   const handleRegister = (tournamentId: string) => {
     setSelectedTournament(tournamentId);
     setShowRegistration(true);
+    setTimeout(() => {
+      registrationDialogRef.current?.focus();
+    }, 100);
   };
 
   const upcomingTournaments = tournaments.filter(t => t.status === "upcoming" || t.status === "live");
@@ -129,9 +133,16 @@ export default function Tournaments() {
 
             {/* Quick Registration */}
             <div className="space-y-6">
-              <Dialog open={showRegistration} onOpenChange={setShowRegistration}>
+              <Dialog open={showRegistration} onOpenChange={(open) => {
+                setShowRegistration(open);
+                if (!open) setSelectedTournament(null);
+              }}>
                 <DialogTrigger asChild>
-                  <Button className="w-full glow-button text-primary-foreground py-3 font-bold" data-testid="button-quick-register">
+                  <Button
+                    ref={registrationDialogRef}
+                    className="w-full glow-button text-primary-foreground py-3 font-bold"
+                    data-testid="button-quick-register"
+                  >
                     Quick Registration
                   </Button>
                 </DialogTrigger>
@@ -139,10 +150,16 @@ export default function Tournaments() {
                   <DialogHeader>
                     <DialogTitle className="font-gaming text-2xl text-primary">Tournament Registration</DialogTitle>
                   </DialogHeader>
-                  <RegistrationForm 
-                    selectedTournamentId={selectedTournament}
-                    onSuccess={() => setShowRegistration(false)}
-                  />
+                  {showRegistration && (
+                    <RegistrationForm
+                      selectedTournamentId={selectedTournament || undefined}
+                      onSuccess={() => {
+                        setShowRegistration(false);
+                        setSelectedTournament(null);
+                      }}
+                      autoFocus
+                    />
+                  )}
                 </DialogContent>
               </Dialog>
 

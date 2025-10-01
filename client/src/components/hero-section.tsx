@@ -21,7 +21,12 @@ export default function HeroSection() {
         <div className="space-y-8">
           <h1 className="font-gaming font-black text-4xl md:text-6xl lg:text-7xl leading-tight">
             <span className="block text-foreground">BECOME THE</span>
-            <span className="block gaming-gradient bg-clip-text text-transparent">ULTIMATE CHAMPION</span>
+            <span
+              className="block gaming-gradient px-2 rounded glow-button"
+              style={{ color: 'white', WebkitBackgroundClip: 'padding-box', backgroundClip: 'padding-box', display: 'inline-block' }}
+            >
+              ULTIMATE CHAMPION
+            </span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Join the most epic Free Fire tournaments designed for young legends aged 10-18. 
@@ -35,14 +40,15 @@ export default function HeroSection() {
                 <span>Register Today!</span>
               </Button>
             </Link>
-            <Button 
-              variant="secondary" 
-              className="px-8 py-4 text-lg font-bold border-2 border-secondary hover:border-accent transition-colors"
-              data-testid="button-watch-highlights"
-            >
-              <Play className="w-5 h-5 mr-2" />
-              Watch Highlights
-            </Button>
+            <Link href="/highlights" data-testid="button-watch-highlights">
+              <Button 
+                variant="secondary" 
+                className="px-8 py-4 text-lg font-bold border-2 border-secondary hover:border-accent transition-colors flex items-center"
+              >
+                <Play className="w-5 h-5 mr-2" />
+                Watch Highlights
+              </Button>
+            </Link>
           </div>
 
           {/* Tournament Stats */}

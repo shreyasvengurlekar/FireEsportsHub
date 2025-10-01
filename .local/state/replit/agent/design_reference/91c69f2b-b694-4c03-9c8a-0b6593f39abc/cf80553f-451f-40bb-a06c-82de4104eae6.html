@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FireStorm Esports - Free Fire Tournaments for Young Champions</title>
+    <meta name="description" content="Join the ultimate Free Fire esports tournaments for players aged 10-18. Register now and become the champion!">
+    <meta name="keywords" content="Free Fire, esports, tournaments, gaming, young players, championship, mobile gaming">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    card: {
+                        DEFAULT: "var(--card)",
+                        foreground: "var(--card-foreground)",
+                    },
+                    popover: {
+                        DEFAULT: "var(--popover)",
+                        foreground: "var(--popover-foreground)",
+                    },
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    destructive: {
+                        DEFAULT: "var(--destructive)",
+                        foreground: "var(--destructive-foreground)",
+                    },
+                    border: "var(--border)",
+                    input: "var(--input)",
+                    ring: "var(--ring)",
+                    chart: {
+                        "1": "var(--chart-1)",
+                        "2": "var(--chart-2)",
+                        "3": "var(--chart-3)",
+                        "4": "var(--chart-4)",
+                        "5": "var(--chart-5)",
+                    }
+                },
+                fontFamily: {
+                    sans: ["var(--font-sans)"],
+                    gaming: ["Orbitron", "monospace"],
+                    body: ["Inter", "sans-serif"],
+                }
+            },
+        }
+    };
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --background: hsl(220 13% 6%);
+            --foreground: hsl(210 40% 98%);
+            --card: hsl(220 13% 9%);
+            --card-foreground: hsl(210 40% 98%);
+            --popover: hsl(220 13% 9%);
+            --popover-foreground: hsl(210 40% 98%);
+            --primary: hsl(18 95% 60%);
+            --primary-foreground: hsl(210 40% 2%);
+            --secondary: hsl(220 13% 16%);
+            --secondary-foreground: hsl(210 40% 98%);
+            --muted: hsl(220 13% 16%);
+            --muted-foreground: hsl(215 20% 65%);
+            --accent: hsl(191 100% 50%);
+            --accent-foreground: hsl(210 40% 2%);
+            --destructive: hsl(0 84% 60%);
+            --destructive-foreground: hsl(210 40% 98%);
+            --border: hsl(220 13% 16%);
+            --input: hsl(220 13% 16%);
+            --ring: hsl(18 95% 60%);
+            --radius: 0.75rem;
+            --font-sans: 'Inter', sans-serif;
+            --font-gaming: 'Orbitron', monospace;
+        }
+        
+        .gaming-gradient {
+            background: linear-gradient(135deg, hsl(18 95% 60%), hsl(0 84% 60%));
+        }
+        
+        .gaming-card {
+            background: linear-gradient(135deg, hsl(220 13% 9%) 0%, hsl(220 13% 12%) 100%);
+            border: 1px solid hsl(220 13% 16%);
+            position: relative;
+        }
+        
+        .gaming-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, hsl(18 95% 60% / 0.1), hsl(191 100% 50% / 0.1));
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .gaming-card:hover::before {
+            opacity: 1;
+        }
+        
+        .neon-border {
+            border: 2px solid hsl(18 95% 60%);
+            box-shadow: 0 0 10px hsl(18 95% 60% / 0.3);
+        }
+        
+        .glow-button {
+            background: linear-gradient(135deg, hsl(18 95% 60%), hsl(0 84% 60%));
+            box-shadow: 0 4px 15px hsl(18 95% 60% / 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .glow-button:hover {
+            box-shadow: 0 6px 20px hsl(18 95% 60% / 0.6);
+            transform: translateY(-2px);
+        }
+        
+        .tournament-card {
+            background: linear-gradient(135deg, hsl(220 13% 9%), hsl(220 13% 7%));
+            border: 1px solid hsl(220 13% 16%);
+            border-left: 4px solid hsl(18 95% 60%);
+        }
+        
+        .active-nav {
+            color: hsl(18 95% 60%);
+            border-bottom: 2px solid hsl(18 95% 60%);
+        }
+        
+        .gaming-input {
+            background: hsl(220 13% 9%);
+            border: 1px solid hsl(220 13% 16%);
+            color: hsl(210 40% 98%);
+        }
+        
+        .gaming-input:focus {
+            border-color: hsl(18 95% 60%);
+            box-shadow: 0 0 0 2px hsl(18 95% 60% / 0.2);
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground font-body">
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-card/95 backdrop-blur-md border-b border-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-fire text-primary text-2xl"></i>
+                    <span class="font-gaming font-bold text-xl text-primary">FireStorm Esports</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-foreground hover:text-primary transition-colors active-nav">Home</a>
+                    <a href="#about" class="text-foreground hover:text-primary transition-colors">About</a>
+                    <a href="#tournaments" class="text-foreground hover:text-primary transition-colors">Tournaments</a>
+                    <a href="#events" class="text-foreground hover:text-primary transition-colors">Events</a>
+                    <a href="#blog" class="text-foreground hover:text-primary transition-colors">Blog</a>
+                    <a href="#contact" class="text-foreground hover:text-primary transition-colors">Contact</a>
+                </div>
+                <button class="glow-button text-primary-foreground px-6 py-2 rounded-lg font-semibold">
+                    Join Now!
+                </button>
+                <div class="md:hidden">
+                    <button class="text-foreground hover:text-primary">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden">
+        <!-- Gaming action background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-background via-card to-background">
+            <div class="absolute inset-0 opacity-20">
+                <!-- Abstract gaming patterns background -->
+                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&h=1080" alt="Gaming setup background" class="w-full h-full object-cover"/>
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-background/90 via-background/50 to-background/90"></div>
+        </div>
+        
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="space-y-8">
+                <h1 class="font-gaming font-black text-4xl md:text-6xl lg:text-7xl leading-tight">
+                    <span class="block text-foreground">BECOME THE</span>
+                    <span class="block gaming-gradient bg-clip-text text-transparent">ULTIMATE CHAMPION</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                    Join the most epic Free Fire tournaments designed for young legends aged 10-18. 
+                    Battle it out with the best players and claim your victory!
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button class="glow-button text-primary-foreground px-8 py-4 rounded-lg font-bold text-lg flex items-center space-x-2">
+                        <i class="fas fa-gamepad"></i>
+                        <span>Register Today!</span>
+                    </button>
+                    <button class="bg-secondary text-secondary-foreground px-8 py-4 rounded-lg font-bold text-lg border-2 border-secondary hover:border-accent transition-colors">
+                        Watch Highlights
+                    </button>
+                </div>
+
+                <!-- Tournament Stats -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 pt-12">
+                    <div class="gaming-card p-6 rounded-lg text-center">
+                        <div class="text-3xl font-gaming font-bold text-primary">500+</div>
+                        <div class="text-muted-foreground">Active Players</div>
+                    </div>
+                    <div class="gaming-card p-6 rounded-lg text-center">
+                        <div class="text-3xl font-gaming font-bold text-accent">$10K</div>
+                        <div class="text-muted-foreground">Prize Pool</div>
+                    </div>
+                    <div class="gaming-card p-6 rounded-lg text-center">
+                        <div class="text-3xl font-gaming font-bold text-primary">24</div>
+                        <div class="text-muted-foreground">Tournaments</div>
+                    </div>
+                    <div class="gaming-card p-6 rounded-lg text-center">
+                        <div class="text-3xl font-gaming font-bold text-accent">15</div>
+                        <div class="text-muted-foreground">Countries</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="py-20 bg-card">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-gaming font-black text-4xl md:text-5xl text-foreground mb-4">
+                    About <span class="text-primary">FireStorm</span>
+                </h2>
+                <p class="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    Building the ultimate gaming community for young Free Fire champions
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <div class="gaming-card p-8 rounded-xl">
+                        <h3 class="font-gaming font-bold text-2xl text-primary mb-4">Our Mission</h3>
+                        <p class="text-muted-foreground text-lg leading-relaxed">
+                            At FireStorm Esports, we're passionate about creating a safe, competitive, and exciting environment 
+                            where young Free Fire players can showcase their skills, learn from the best, and build lasting friendships 
+                            in the gaming community.
+                        </p>
+                    </div>
+                    
+                    <div class="gaming-card p-8 rounded-xl">
+                        <h3 class="font-gaming font-bold text-2xl text-accent mb-4">Why Choose Us?</h3>
+                        <ul class="space-y-3 text-muted-foreground">
+                            <li class="flex items-center space-x-3">
+                                <i class="fas fa-check-circle text-primary"></i>
+                                <span>Safe environment designed specifically for young players</span>
+                            </li>
+                            <li class="flex items-center space-x-3">
+                                <i class="fas fa-check-circle text-primary"></i>
+                                <span>Professional tournament organization and fair play</span>
+                            </li>
+                            <li class="flex items-center space-x-3">
+                                <i class="fas fa-check-circle text-primary"></i>
+                                <span>Amazing prizes and recognition for champions</span>
+                            </li>
+                            <li class="flex items-center space-x-3">
+                                <i class="fas fa-check-circle text-primary"></i>
+                                <span>24/7 support and community guidance</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Community focused esports environment -->
+                    <img src="https://images.unsplash.com/photo-1556438064-2d7646166914?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" alt="Young gamers in esports tournament" class="rounded-xl shadow-lg w-full h-auto" />
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="gaming-card p-6 rounded-lg text-center">
+                            <i class="fas fa-users text-primary text-2xl mb-2"></i>
+                            <div class="font-gaming font-bold text-lg">Community First</div>
+                            <div class="text-sm text-muted-foreground">Building lasting friendships</div>
+                        </div>
+                        <div class="gaming-card p-6 rounded-lg text-center">
+                            <i class="fas fa-shield-alt text-accent text-2xl mb-2"></i>
+                            <div class="font-gaming font-bold text-lg">Safe Gaming</div>
+                            <div class="text-sm text-muted-foreground">Protected environment</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tournament Registration Section -->
+    <section id="tournaments" class="py-20 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-gaming font-black text-4xl md:text-5xl text-foreground mb-4">
+                    Tournament <span class="text-primary">Registration</span>
+                </h2>
+                <p class="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    Ready to prove you're the ultimate Free Fire champion? Here's everything you need to know!
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Registration Steps -->
+                <div class="lg:col-span-2">
+                    <div class="gaming-card p-8 rounded-xl mb-8">
+                        <h3 class="font-gaming font-bold text-2xl text-primary mb-6">How to Register</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-start space-x-4">
+                                <div class="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center font-bold">1</div>
+                                <div>
+                                    <h4 class="font-semibold text-lg mb-2">Fill Registration Form</h4>
+                                    <p class="text-muted-foreground">Complete the registration form with your gaming details and contact information.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center font-bold">2</div>
+                                <div>
+                                    <h4 class="font-semibold text-lg mb-2">Age Verification</h4>
+                                    <p class="text-muted-foreground">Provide age verification (10-18 years old) with parental consent if under 16.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center font-bold">3</div>
+                                <div>
+                                    <h4 class="font-semibold text-lg mb-2">Join Discord Server</h4>
+                                    <p class="text-muted-foreground">Connect with our community and receive tournament updates and match schedules.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center font-bold">4</div>
+                                <div>
+                                    <h4 class="font-semibold text-lg mb-2">Confirmation</h4>
+                                    <p class="text-muted-foreground">Receive confirmation email with tournament details and team assignments.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Eligibility Criteria -->
+                    <div class="gaming-card p-8 rounded-xl">
+                        <h3 class="font-gaming font-bold text-2xl text-accent mb-6">Eligibility Criteria</h3>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-check text-primary"></i>
+                                    <span>Age: 10-18 years old</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-check text-primary"></i>
+                                    <span>Free Fire account level 15+</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-check text-primary"></i>
+                                    <span>Discord account required</span>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-check text-primary"></i>
+                                    <span>Stable internet connection</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-check text-primary"></i>
+                                    <span>Respectful gaming behavior</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-check text-primary"></i>
+                                    <span>Parental consent (under 16)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Registration Form -->
+                <div class="space-y-6">
+                    <div class="gaming-card p-8 rounded-xl">
+                        <h3 class="font-gaming font-bold text-xl text-primary mb-6">Quick Registration</h3>
+                        <form class="space-y-4">
+                            <!-- @COMPONENT: RegistrationForm [handles player registration] -->
+                            <input type="text" placeholder="Player Name" class="w-full px-4 py-3 rounded-lg gaming-input focus:outline-none focus:ring-2 focus:ring-primary" data-mock="true">
+                            <input type="email" placeholder="Email Address" class="w-full px-4 py-3 rounded-lg gaming-input focus:outline-none focus:ring-2 focus:ring-primary" data-mock="true">
+                            <input type="number" placeholder="Age" min="10" max="18" class="w-full px-4 py-3 rounded-lg gaming-input focus:outline-none focus:ring-2 focus:ring-primary" data-mock="true">
+                            <input type="text" placeholder="Free Fire ID" class="w-full px-4 py-3 rounded-lg gaming-input focus:outline-none focus:ring-2 focus:ring-primary" data-mock="true">
+                            <select class="w-full px-4 py-3 rounded-lg gaming-input focus:outline-none focus:ring-2 focus:ring-primary" data-mock="true">
+                                <option>Select Tournament</option>
+                                <option>Weekly Clash - Nov 2024</option>
+                                <option>Championship Series</option>
+                                <option>Rookie Tournament</option>
+                            </select>
+                            <div class="flex items-start space-x-2">
+                                <input type="checkbox" id="terms" class="mt-1" data-mock="true">
+                                <label for="terms" class="text-sm text-muted-foreground">
+                                    I agree to the tournament rules and have parental consent if under 16
+                                </label>
+                            </div>
+                            <button type="submit" class="w-full glow-button text-primary-foreground py-3 rounded-lg font-bold" data-event="click:handleRegistration" data-implementation="Should validate form and submit registration">
+                                Register Now!
+                            </button>
+                            <!-- @END_COMPONENT: RegistrationForm -->
+                        </form>
+                    </div>
+
+                    <!-- Next Tournament Info -->
+                    <div class="neon-border p-6 rounded-xl">
+                        <div class="text-center">
+                            <h4 class="font-gaming font-bold text-lg mb-2">Next Tournament</h4>
+                            <div class="text-2xl font-bold text-primary mb-1">Weekly Clash</div>
+                            <div class="text-muted-foreground mb-4">November 25, 2024</div>
+                            <div class="text-3xl font-gaming font-black text-accent">$2,500 Prize Pool</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section id="events" class="py-20 bg-card">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-gaming font-black text-4xl md:text-5xl text-foreground mb-4">
+                    Upcoming <span class="text-primary">Events</span>
+                </h2>
+                <p class="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    Don't miss out on these amazing tournaments and community events!
+                </p>
+            </div>
+
+            <!-- Featured Event -->
+            <div class="neon-border p-8 rounded-xl mb-12">
+                <div class="grid lg:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <!-- Epic gaming tournament scene -->
+                        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=500" alt="Championship tournament arena" class="rounded-lg shadow-lg w-full h-auto" />
+                    </div>
+                    <div class="space-y-4">
+                        <div class="text-sm text-accent font-semibold uppercase tracking-wide">Featured Event</div>
+                        <h3 class="font-gaming font-black text-3xl text-primary">FireStorm Championship 2024</h3>
+                        <p class="text-muted-foreground text-lg">
+                            The biggest Free Fire tournament of the year! 128 players, 4 weeks of intense battles, 
+                            and a massive $10,000 prize pool. Do you have what it takes to become the ultimate champion?
+                        </p>
+                        <div class="flex items-center space-x-6 text-sm">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-calendar text-primary"></i>
+                                <span>December 1-22, 2024</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-trophy text-primary"></i>
+                                <span>$10,000 Prize Pool</span>
+                            </div>
+                        </div>
+                        <button class="glow-button text-primary-foreground px-8 py-3 rounded-lg font-bold">
+                            Register for Championship!
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Events Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- @MAP: events.map(event => ( -->
+                <div class="tournament-card p-6 rounded-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-sm text-accent font-semibold">NOV 25</div>
+                        <div class="bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-bold">LIVE</div>
+                    </div>
+                    <h4 class="font-gaming font-bold text-lg mb-2" data-mock="true">Weekly Clash #12</h4>
+                    <p class="text-muted-foreground text-sm mb-4" data-mock="true">Fast-paced 1-hour tournament with instant rewards</p>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span>Prize Pool:</span>
+                            <span class="font-semibold text-primary" data-mock="true">$2,500</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Players:</span>
+                            <span class="font-semibold" data-mock="true">32/64</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Format:</span>
+                            <span class="font-semibold" data-mock="true">Battle Royale</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-secondary text-secondary-foreground py-2 rounded-lg font-semibold mt-4 hover:bg-primary hover:text-primary-foreground transition-colors">
+                        Join Event
+                    </button>
+                </div>
+                
+                <div class="tournament-card p-6 rounded-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-sm text-accent font-semibold">DEC 1</div>
+                        <div class="bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-bold">UPCOMING</div>
+                    </div>
+                    <h4 class="font-gaming font-bold text-lg mb-2" data-mock="true">Rookie Championship</h4>
+                    <p class="text-muted-foreground text-sm mb-4" data-mock="true">Special tournament for new players (Level 15-30)</p>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span>Prize Pool:</span>
+                            <span class="font-semibold text-primary" data-mock="true">$1,000</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Players:</span>
+                            <span class="font-semibold" data-mock="true">12/32</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Format:</span>
+                            <span class="font-semibold" data-mock="true">Squad Battle</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-secondary text-secondary-foreground py-2 rounded-lg font-semibold mt-4 hover:bg-primary hover:text-primary-foreground transition-colors">
+                        Pre-Register
+                    </button>
+                </div>
+
+                <div class="tournament-card p-6 rounded-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-sm text-accent font-semibold">DEC 15</div>
+                        <div class="bg-muted text-muted-foreground px-3 py-1 rounded-full text-xs font-bold">COMING SOON</div>
+                    </div>
+                    <h4 class="font-gaming font-bold text-lg mb-2" data-mock="true">Holiday Showdown</h4>
+                    <p class="text-muted-foreground text-sm mb-4" data-mock="true">Special holiday event with exclusive rewards</p>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span>Prize Pool:</span>
+                            <span class="font-semibold text-primary" data-mock="true">$5,000</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Players:</span>
+                            <span class="font-semibold" data-mock="true">0/128</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Format:</span>
+                            <span class="font-semibold" data-mock="true">Mixed Mode</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-muted text-muted-foreground py-2 rounded-lg font-semibold mt-4 cursor-not-allowed">
+                        Registration Opens Soon
+                    </button>
+                </div>
+                <!-- @END_MAP )) -->
+            </div>
+            
+            <!-- Past Results -->
+            <div class="mt-16">
+                <h3 class="font-gaming font-bold text-2xl text-center mb-8">Recent Champions</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="gaming-card p-6 rounded-lg text-center">
+                        <div class="text-3xl mb-2">🥇</div>
+                        <div class="font-gaming font-bold text-lg text-primary" data-mock="true">ProGamer_Alex</div>
+                        <div class="text-sm text-muted-foreground" data-mock="true">Weekly Clash #11 Champion</div>
+                        <div class="text-accent font-semibold mt-2" data-mock="true">Won $1,500</div>
+                    </div>
+                    <div class="gaming-card p-6 rounded-lg text-center">
+                        <div class="text-3xl mb-2">🥈</div>
+                        <div class="font-gaming font-bold text-lg text-accent" data-mock="true">FireStorm_Luna</div>
+                        <div class="text-sm text-muted-foreground" data-mock="true">Weekly Clash #11 Runner-up</div>
+                        <div class="text-accent font-semibold mt-2" data-mock="true">Won $750</div>
+                    </div>
+                    <div class="gaming-card p-6 rounded-lg text-center">
+                        <div class="text-3xl mb-2">🥉</div>
+                        <div class="font-gaming font-bold text-lg text-primary" data-mock="true">SkillMaster_99</div>
+                        <div class="text-sm text-muted-foreground" data-mock="true">Weekly Clash #11 Third Place</div>
+                        <div class="text-accent font-semibold mt-2" data-mock="true">Won $250</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog/News Section -->
+    <section id="blog" class="py-20 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-gaming font-black text-4xl md:text-5xl text-foreground mb-4">
+                    Gaming <span class="text-primary">Hub</span>
+                </h2>
+                <p class="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    Stay updated with the latest Free Fire strategies, tips, and tournament news
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Featured Article -->
+                <div class="lg:col-span-2 gaming-card rounded-xl overflow-hidden">
+                    <!-- Free Fire strategy guide cover image -->
+                    <img src="https://images.unsplash.com/photo-1560253023-3ec5d502959f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=400" alt="Free Fire gameplay strategy screenshot" class="w-full h-64 object-cover" />
+                    <div class="p-8">
+                        <div class="flex items-center space-x-2 mb-4">
+                            <span class="bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-bold">STRATEGY</span>
+                            <span class="text-muted-foreground text-sm">Nov 20, 2024</span>
+                        </div>
+                        <h3 class="font-gaming font-bold text-2xl mb-4">Top 10 Pro Strategies to Dominate Free Fire Tournaments</h3>
+                        <p class="text-muted-foreground mb-6">
+                            Learn the advanced tactics that pro players use to consistently win tournaments. From positioning 
+                            strategies to weapon combinations, we cover everything you need to know to elevate your game 
+                            and compete at the highest level.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-primary-foreground text-sm"></i>
+                                </div>
+                                <span class="text-sm" data-mock="true">By GameMaster_Pro</span>
+                            </div>
+                            <button class="text-primary hover:text-accent font-semibold">
+                                Read Full Guide →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar Articles -->
+                <div class="space-y-6">
+                    <div class="gaming-card p-6 rounded-lg">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <span class="bg-accent text-accent-foreground px-2 py-1 rounded-full text-xs font-bold">NEWS</span>
+                            <span class="text-muted-foreground text-sm">Nov 18</span>
+                        </div>
+                        <h4 class="font-gaming font-bold mb-2" data-mock="true">New Tournament Format Coming December</h4>
+                        <p class="text-muted-foreground text-sm mb-3" data-mock="true">We're introducing an exciting new tournament format...</p>
+                        <button class="text-primary text-sm font-semibold">Read More →</button>
+                    </div>
+
+                    <div class="gaming-card p-6 rounded-lg">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <span class="bg-primary text-primary-foreground px-2 py-1 rounded-full text-xs font-bold">TIPS</span>
+                            <span class="text-muted-foreground text-sm">Nov 15</span>
+                        </div>
+                        <h4 class="font-gaming font-bold mb-2" data-mock="true">Best Character Combinations for Squad Play</h4>
+                        <p class="text-muted-foreground text-sm mb-3" data-mock="true">Discover the most effective character synergies...</p>
+                        <button class="text-primary text-sm font-semibold">Read More →</button>
+                    </div>
+
+                    <div class="gaming-card p-6 rounded-lg">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <span class="bg-accent text-accent-foreground px-2 py-1 rounded-full text-xs font-bold">GUIDE</span>
+                            <span class="text-muted-foreground text-sm">Nov 12</span>
+                        </div>
+                        <h4 class="font-gaming font-bold mb-2" data-mock="true">Weapon Mastery: From Beginner to Pro</h4>
+                        <p class="text-muted-foreground text-sm mb-3" data-mock="true">Complete guide to mastering every weapon type...</p>
+                        <button class="text-primary text-sm font-semibold">Read More →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Articles -->
+            <div class="mt-12">
+                <h3 class="font-gaming font-bold text-2xl mb-8 text-center">Popular Articles This Week</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- @MAP: popularArticles.map(article => ( -->
+                    <div class="gaming-card p-4 rounded-lg">
+                        <div class="aspect-video bg-muted rounded-lg mb-4 flex items-center justify-center">
+                            <i class="fas fa-play-circle text-4xl text-primary"></i>
+                        </div>
+                        <h5 class="font-semibold mb-2" data-mock="true">5-Minute Guide: Landing Zone Tactics</h5>
+                        <p class="text-muted-foreground text-sm mb-3" data-mock="true">Quick tips for choosing the perfect landing spot</p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-accent" data-mock="true">2.5k views</span>
+                            <span class="text-muted-foreground" data-mock="true">5 min read</span>
+                        </div>
+                    </div>
+                    
+                    <div class="gaming-card p-4 rounded-lg">
+                        <div class="aspect-video bg-muted rounded-lg mb-4 flex items-center justify-center">
+                            <i class="fas fa-gamepad text-4xl text-primary"></i>
+                        </div>
+                        <h5 class="font-semibold mb-2" data-mock="true">Mental Preparation for Tournaments</h5>
+                        <p class="text-muted-foreground text-sm mb-3" data-mock="true">Stay calm and focused during high-stakes matches</p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-accent" data-mock="true">1.8k views</span>
+                            <span class="text-muted-foreground" data-mock="true">3 min read</span>
+                        </div>
+                    </div>
+                    
+                    <div class="gaming-card p-4 rounded-lg">
+                        <div class="aspect-video bg-muted rounded-lg mb-4 flex items-center justify-center">
+                            <i class="fas fa-trophy text-4xl text-primary"></i>
+                        </div>
+                        <h5 class="font-semibold mb-2" data-mock="true">Tournament Highlights: Best Plays</h5>
+                        <p class="text-muted-foreground text-sm mb-3" data-mock="true">Amazing plays from last week's championship</p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-accent" data-mock="true">5.2k views</span>
+                            <span class="text-muted-foreground" data-mock="true">Video</span>
+                        </div>
+                    </div>
+                    
+                    <div class="gaming-card p-4 rounded-lg">
+                        <div class="aspect-video bg-muted rounded-lg mb-4 flex items-center justify-center">
+                            <i class="fas fa-users text-4xl text-primary"></i>
+                        </div>
+                        <h5 class="font-semibold mb-2" data-mock="true">Building Your Dream Squad</h5>
+                        <p class="text-muted-foreground text-sm mb-3" data-mock="true">Tips for finding and coordinating with teammates</p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-accent" data-mock="true">3.1k views</span>
+                            <span class="text-muted-foreground" data-mock="true">7 min read</span>
+                        </div>
+                    </div>
+                    <!-- @END_MAP )) -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-card">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-gaming font-black text-4xl md:text-5xl text-foreground mb-4">
+                    Get <span class="text-primary">Connected</span>
+                </h2>
+                <p class="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    Need help or have questions? We're here to support you 24/7!
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Contact Form -->
+                <div class="gaming-card p-8 rounded-xl">
+                    <h3 class="font-gaming font-bold text-2xl mb-6">Send Us a Message</h3>
+                    <form class="space-y-4">
+                        <!-- @COMPONENT: ContactForm [handles support inquiries] -->
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <input type="text" placeholder="Your Name" class="px-4 py-3 rounded-lg gaming-input focus:outline-none focus:ring-2 focus:ring-primary" data-mock="true">
+                            <input type="email" placeholder="Email Address" class="px-4 py-3 rounded-lg gaming-input focus:outline-none focus:ring-2 focus:ring-primary" data-mock="true">
+                        </div>
+                        <input type="text" placeholder="Subject" class="w-full px-4 py-3 rounded-lg gaming-input focus:outline-none focus:ring-2 focus:ring-primary" data-mock="true">
+                        <textarea placeholder="Your Message" rows="6" class="w-full px-4 py-3 rounded-lg gaming-input focus:outline-none focus:ring-2 focus:ring-primary resize-none" data-mock="true"></textarea>
+                        <button type="submit" class="w-full glow-button text-primary-foreground py-3 rounded-lg font-bold" data-event="click:handleContactSubmit" data-implementation="Should validate and send support message">
+                            Send Message
+                        </button>
+                        <!-- @END_COMPONENT: ContactForm -->
+                    </form>
+                </div>
+
+                <!-- Support Info -->
+                <div class="space-y-6">
+                    <!-- Support Options -->
+                    <div class="gaming-card p-8 rounded-xl">
+                        <h3 class="font-gaming font-bold text-2xl mb-6">Support Options</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-start space-x-4">
+                                <div class="bg-primary text-primary-foreground rounded-full w-10 h-10 flex items-center justify-center">
+                                    <i class="fab fa-discord"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">Discord Community</h4>
+                                    <p class="text-muted-foreground text-sm mb-2">Join our community for instant support and connect with other players</p>
+                                    <button class="text-primary font-semibold text-sm">Join Discord →</button>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="bg-accent text-accent-foreground rounded-full w-10 h-10 flex items-center justify-center">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">Email Support</h4>
+                                    <p class="text-muted-foreground text-sm mb-2">Get detailed help via email within 24 hours</p>
+                                    <a href="mailto:support@firestormesports.com" class="text-accent font-semibold text-sm" data-mock="true">support@firestormesports.com</a>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="bg-primary text-primary-foreground rounded-full w-10 h-10 flex items-center justify-center">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">Live Chat</h4>
+                                    <p class="text-muted-foreground text-sm mb-2">Available during tournament hours</p>
+                                    <span class="text-muted-foreground text-sm" data-mock="true">Monday-Friday: 3PM-9PM EST</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Media -->
+                    <div class="gaming-card p-8 rounded-xl">
+                        <h3 class="font-gaming font-bold text-2xl mb-6">Follow Us</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button class="flex items-center justify-center space-x-2 bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 transition-colors">
+                                <i class="fab fa-twitter text-xl"></i>
+                                <span class="font-semibold">Twitter</span>
+                            </button>
+                            <button class="flex items-center justify-center space-x-2 bg-pink-600 text-white p-4 rounded-lg hover:bg-pink-700 transition-colors">
+                                <i class="fab fa-instagram text-xl"></i>
+                                <span class="font-semibold">Instagram</span>
+                            </button>
+                            <button class="flex items-center justify-center space-x-2 bg-red-600 text-white p-4 rounded-lg hover:bg-red-700 transition-colors">
+                                <i class="fab fa-youtube text-xl"></i>
+                                <span class="font-semibold">YouTube</span>
+                            </button>
+                            <button class="flex items-center justify-center space-x-2 bg-green-600 text-white p-4 rounded-lg hover:bg-green-700 transition-colors">
+                                <i class="fab fa-whatsapp text-xl"></i>
+                                <span class="font-semibold">WhatsApp</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Preview -->
+                    <div class="gaming-card p-8 rounded-xl">
+                        <h3 class="font-gaming font-bold text-2xl mb-6">Quick FAQs</h3>
+                        <div class="space-y-4">
+                            <details class="border-b border-border pb-4">
+                                <summary class="font-semibold cursor-pointer mb-2">How do I register for tournaments?</summary>
+                                <p class="text-muted-foreground text-sm">Simply fill out our registration form, provide age verification, and join our Discord community for updates.</p>
+                            </details>
+                            <details class="border-b border-border pb-4">
+                                <summary class="font-semibold cursor-pointer mb-2">What age group can participate?</summary>
+                                <p class="text-muted-foreground text-sm">Our tournaments are exclusively for young gamers aged 10-18 years old.</p>
+                            </details>
+                            <details class="border-b border-border pb-4">
+                                <summary class="font-semibold cursor-pointer mb-2">How are prizes distributed?</summary>
+                                <p class="text-muted-foreground text-sm">Prizes are distributed within 48 hours after tournament completion via digital payment methods.</p>
+                            </details>
+                        </div>
+                        <button class="mt-4 text-primary font-semibold">
+                            View All FAQs →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-background border-t border-border py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-fire text-primary text-2xl"></i>
+                        <span class="font-gaming font-bold text-xl text-primary">FireStorm Esports</span>
+                    </div>
+                    <p class="text-muted-foreground">
+                        Building the ultimate gaming community for young Free Fire champions worldwide.
+                    </p>
+                    <div class="flex space-x-4">
+                        <button class="text-muted-foreground hover:text-primary transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </button>
+                        <button class="text-muted-foreground hover:text-primary transition-colors">
+                            <i class="fab fa-discord text-xl"></i>
+                        </button>
+                        <button class="text-muted-foreground hover:text-primary transition-colors">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </button>
+                        <button class="text-muted-foreground hover:text-primary transition-colors">
+                            <i class="fab fa-youtube text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-gaming font-bold text-lg mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-muted-foreground">
+                        <li><a href="#home" class="hover:text-primary transition-colors">Home</a></li>
+                        <li><a href="#about" class="hover:text-primary transition-colors">About Us</a></li>
+                        <li><a href="#tournaments" class="hover:text-primary transition-colors">Tournaments</a></li>
+                        <li><a href="#events" class="hover:text-primary transition-colors">Events</a></li>
+                        <li><a href="#blog" class="hover:text-primary transition-colors">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-gaming font-bold text-lg mb-4">Support</h4>
+                    <ul class="space-y-2 text-muted-foreground">
+                        <li><a href="#contact" class="hover:text-primary transition-colors">Contact</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Tournament Rules</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Terms of Service</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-gaming font-bold text-lg mb-4">Newsletter</h4>
+                    <p class="text-muted-foreground mb-4">Stay updated with tournament announcements!</p>
+                    <form class="space-y-2">
+                        <!-- @COMPONENT: NewsletterForm [handles email subscriptions] -->
+                        <input type="email" placeholder="Enter your email" class="w-full px-3 py-2 rounded gaming-input focus:outline-none focus:ring-2 focus:ring-primary" data-mock="true">
+                        <button type="submit" class="w-full bg-primary text-primary-foreground py-2 rounded font-semibold hover:bg-primary/90 transition-colors" data-event="click:handleNewsletterSubscribe" data-implementation="Should validate email and add to newsletter list">
+                            Subscribe
+                        </button>
+                        <!-- @END_COMPONENT: NewsletterForm -->
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-border pt-8 mt-8 text-center">
+                <p class="text-muted-foreground">
+                    © 2024 FireStorm Esports. All rights reserved. | Designed for young gamers aged 10-18
+                </p>
+                <p class="text-muted-foreground text-sm mt-2">
+                    #FireStormEsports #FreeFire #YouthGaming #EsportsTournament #MobileGaming #GameOn
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // TODO: Implement smooth scrolling navigation
+        // TODO: Implement form validation and submission handlers
+        // TODO: Implement tournament registration system
+        // TODO: Implement contact form submission
+        // TODO: Implement newsletter subscription
+        // TODO: Add mobile menu toggle functionality
+        // TODO: Implement search functionality for blog articles
+        // TODO: Add tournament countdown timers
+        // TODO: Implement player leaderboard system
+        // TODO: Add social media sharing functionality
+        
+        (function() {
+            // Simple smooth scrolling for navigation links
+            const navLinks = document.querySelectorAll('nav a[href^="#"]');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ 
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Update active nav item on scroll
+            const sections = document.querySelectorAll('section[id]');
+            const observerOptions = {
+                rootMargin: '-20% 0px -60% 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => link.classList.remove('active-nav'));
+                        const activeLink = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+                        if (activeLink) {
+                            activeLink.classList.add('active-nav');
+                        }
+                    }
+                });
+            }, observerOptions);
+            
+            sections.forEach(section => observer.observe(section));
+        })();
+    </script>
+</body>
+</html>
