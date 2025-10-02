@@ -1,5 +1,5 @@
 import type { Express } from "express";
-import { storage } from "./storage";
+import { storage } from "./storage.js";
 import { insertRegistrationSchema, insertContactSchema, insertNewsletterSchema } from "@shared/schema";
 import { z } from "zod";
 
