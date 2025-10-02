@@ -1,4 +1,4 @@
-# [🔥 Fire Esports Hub 🔥](https://fire-esports-hub.vercel.app/)
+# [🔥 Fire Esports Hub 🔥](https://fire-esports.vercel.app/)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/--typescript-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
