@@ -228,11 +228,18 @@ class MemStorage implements IStorage {
   async createTournament(insertTournament: InsertTournament): Promise<Tournament> {
     const id = randomUUID();
     const tournament: Tournament = {
-      ...insertTournament,
       id,
+      name: insertTournament.name,
+      description: insertTournament.description,
+      prizePool: insertTournament.prizePool,
+      maxPlayers: insertTournament.maxPlayers,
       currentPlayers: insertTournament.currentPlayers ?? 0,
+      format: insertTournament.format,
       status: insertTournament.status ?? 'upcoming',
+      startDate: insertTournament.startDate,
+      endDate: insertTournament.endDate ?? null,
       eligibilityMinLevel: insertTournament.eligibilityMinLevel ?? 15,
+      eligibilityMaxLevel: insertTournament.eligibilityMaxLevel ?? null,
       createdAt: new Date(),
     };
     this.tournaments.set(id, tournament);
