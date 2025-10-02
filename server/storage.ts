@@ -2,18 +2,24 @@ import {
   users,
   type User, 
   type InsertUser, 
+  tournaments,
   type Tournament, 
   type InsertTournament,
+  registrations,
   type Registration,
   type InsertRegistration,
+  blogPosts,
   type BlogPost,
   type InsertBlogPost,
+  contacts,
   type Contact,
   type InsertContact,
+  newsletters,
   type Newsletter,
   type InsertNewsletter
 } from "@shared/schema";
 import { randomUUID } from "crypto";
+import { eq, desc, asc, sql } from "drizzle-orm";
 
 export interface IStorage {
   // Users
@@ -221,12 +227,7 @@ class MemStorage implements IStorage {
 
   async createTournament(insertTournament: InsertTournament): Promise<Tournament> {
     const id = randomUUID();
-    const tournament: Tournament = { 
-      ...insertTournament, 
-      id,
-      currentPlayers: insertTournament.currentPlayers || 0,
-      createdAt: new Date()
-    };
+    const tournament: Tournament = { ...insertTournament, id, currentPlayers: insertTournament.currentPlayers || 0, createdAt: new Date() };
     this.tournaments.set(id, tournament);
     return tournament;
   }
@@ -347,74 +348,80 @@ class DrizzleStorage implements IStorage {
 
   // Tournaments
   async getTournaments(): Promise<Tournament[]> {
-    return db.query.tournamentsTable.findMany({
-      orderBy: [asc(tournamentsTable.startDate)],
+    return db.query.tournaments.findMany({
+      orderBy: [asc(tournaments.startDate)],
     });
   }
   async getTournament(id: string): Promise<Tournament | undefined> {
-    return db.query.tournamentsTable.findFirst({ where: eq(tournamentsTable.id, id) });
+    return db.query.tournaments.findFirst({ where: eq(tournaments.id, id) });
   }
   async createTournament(tournament: InsertTournament): Promise<Tournament> {
-    const [newTournament] = await db.insert(tournamentsTable).values(tournament).returning();
+    const [newTournament] = await db.insert(tournaments).values(tournament).returning();
     return newTournament;
   }
   async updateTournament(id: string, updates: Partial<Tournament>): Promise<Tournament | undefined> {
-    const [updatedTournament] = await db.update(tournamentsTable).set(updates).where(eq(tournamentsTable.id, id)).returning();
+    const [updatedTournament] = await db.update(tournaments).set(updates).where(eq(tournaments.id, id)).returning();
     return updatedTournament;
   }
 
   // Registrations
   async getRegistrations(tournamentId?: string): Promise<Registration[]> {
     if (tournamentId) {
-      return db.query.registrationsTable.findMany({ where: eq(registrationsTable.tournamentId, tournamentId) });
+      return db.query.registrations.findMany({ where: eq(registrations.tournamentId, tournamentId) });
     }
-    return db.query.registrationsTable.findMany();
+    return db.query.registrations.findMany();
   }
   async createRegistration(registration: InsertRegistration): Promise<Registration> {
-    // Note: In a real app, you'd wrap this and the player count update in a transaction
-    const [newRegistration] = await db.insert(registrationsTable).values(registration).returning();
-    
-    // Update tournament current players count
-    const tournament = await this.getTournament(registration.tournamentId);
-    if (tournament) {
-      await this.updateTournament(registration.tournamentId, { currentPlayers: tournament.currentPlayers + 1 });
-    }
+    return db.transaction(async (tx) => {
+      const [newRegistration] = await tx
+        .insert(registrations)
+        .values(registration)
+        .returning();
 
-    return newRegistration;
+      await tx
+        .update(tournaments)
+        .set({
+          currentPlayers: sql`${tournaments.currentPlayers} + 1`,
+        })
+        .where(eq(tournaments.id, registration.tournamentId));
+
+      return newRegistration;
+    });
   }
   
   // Blog Posts
   async getBlogPosts(): Promise<BlogPost[]> {
-    return db.query.blogPostsTable.findMany({
-      orderBy: [desc(blogPostsTable.createdAt)],
+    return db.query.blogPosts.findMany({
+      orderBy: [desc(blogPosts.createdAt)],
     });
   }
   async getBlogPost(id: string): Promise<BlogPost | undefined> {
-    return db.query.blogPostsTable.findFirst({ where: eq(blogPostsTable.id, id) });
+    return db.query.blogPosts.findFirst({ where: eq(blogPosts.id, id) });
   }
   async createBlogPost(post: InsertBlogPost): Promise<BlogPost> {
-    const [newPost] = await db.insert(blogPostsTable).values(post).returning();
+    const [newPost] = await db.insert(blogPosts).values(post).returning();
     return newPost;
   }
   async incrementPostViews(id: string): Promise<void> {
-    const post = await this.getBlogPost(id);
-    if (post) {
-      await db.update(blogPostsTable).set({ views: post.views + 1 }).where(eq(blogPostsTable.id, id));
-    }
+    await db.update(blogPosts)
+      .set({ views: sql`${blogPosts.views} + 1` })
+      .where(eq(blogPosts.id, id));
   }
 
   // Contacts
   async createContact(contact: InsertContact): Promise<Contact> {
-    const [newContact] = await db.insert(contactsTable).values(contact).returning();
+    const [newContact] = await db.insert(contacts).values(contact).returning();
     return newContact;
   }
   
   // Newsletter
   async createNewsletterSubscription(newsletter: InsertNewsletter): Promise<Newsletter> {
-    const [newSubscription] = await db.insert(newslettersTable).values(newsletter).returning();
+    const [newSubscription] = await db.insert(newsletters).values(newsletter).returning();
     return newSubscription;
   }
 }
+
+import { db } from "./db.js";
 
 function initializeStorage(): IStorage {
   // Use DrizzleStorage in production (on Vercel)

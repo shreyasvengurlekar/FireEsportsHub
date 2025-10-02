@@ -1,10 +1,9 @@
 import type { Express } from "express";
-import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertRegistrationSchema, insertContactSchema, insertNewsletterSchema } from "@shared/schema";
 import { z } from "zod";
 
-export async function registerRoutes(app: Express): Promise<Server> {
+export async function registerRoutes(app: Express): Promise<void> {
   // Tournament routes
   app.get("/api/tournaments", async (req, res) => {
     try {
@@ -109,7 +108,4 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to subscribe to newsletter" });
     }
   });
-
-  const httpServer = createServer(app);
-  return httpServer;
 }

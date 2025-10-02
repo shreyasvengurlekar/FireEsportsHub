@@ -1,7 +1,8 @@
 import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "./routes";
+import { registerRoutes } from "./routes.js";
+import { createServer } from "http";
 // @ts-ignore
-import { setupVite, serveStatic, log } from "./vite";
+import { setupVite, serveStatic, log } from "./vite.js";
 
 const app = express();
 app.use(express.json());
@@ -37,8 +38,9 @@ app.use((req, res, next) => {
   next();
 });
 
-const startServer = async () => {
+export const startServer = async () => {
   await registerRoutes(app);
+  const httpServer = createServer(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
@@ -52,23 +54,19 @@ const startServer = async () => {
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
   if (process.env.NODE_ENV === "development") {
-    // This will not have a server instance in the serverless function
-    // but it's only for local dev.
-    await setupVite(app);
+    await setupVite(app, httpServer);
   } else {
     serveStatic(app);
   }
 
   // Only listen in local development. Vercel will handle the server.
   if (process.env.NODE_ENV === "development") {
-    const port = parseInt(process.env.PORT || '3000', 10);
-    app.listen(port, () => {
+    const port = parseInt(process.env.PORT || "3000", 10);
+    httpServer.listen(port, () => {
       log(`Server listening on http://localhost:${port}`);
     });
   }
 };
-
-startServer();
 
 // Export the app for Vercel
 export default app;
